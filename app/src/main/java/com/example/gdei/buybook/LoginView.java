@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 
@@ -42,8 +42,9 @@ public class LoginView extends Activity {
         public void handleMessage(Message msg) {
             //判断登录请求
             if (msg.what == 0x123) {
-                String str = "";
-                StringBuffer result = new StringBuffer();
+                //String str = "";
+                //StringBuffer result = new StringBuffer();
+                /*
                 try {
                     while ((str = br.readLine()) != null) {
                         result.append(str);
@@ -55,6 +56,7 @@ public class LoginView extends Activity {
                         if (result.toString().equals("密码错误！")) {
                             Toast.makeText(LoginView.this, "密码错误！！", Toast.LENGTH_LONG).show();
                         } else {
+                            */
                                 Intent toMainView = new Intent(LoginView.this, MainActivity.class);
                                 User.setUserName(userName);
                                 User.setPassword(password);
@@ -62,7 +64,7 @@ public class LoginView extends Activity {
                                 startActivity(toMainView);
                                 finish();
 
-                        }
+                        /*}
                     }
 
                 } catch (Exception e) {
@@ -70,6 +72,7 @@ public class LoginView extends Activity {
                 }
             }else if (msg.what == 0x234){
                 Toast.makeText(LoginView.this, "登录失败！！", Toast.LENGTH_LONG).show();
+            */
             }
         }
     };
@@ -117,14 +120,16 @@ public class LoginView extends Activity {
             new Thread(){
                 @Override
                 public void run() {
+                    Log.i(TAG, "run: ");
                     LoginThread loginThread = new LoginThread(userName, password);
                     FutureTask<ArrayList<Book>> task = new FutureTask<ArrayList<Book>>(loginThread);
                     new Thread(task).start();
-                    try {
+                    try { 
                         if (task.get() == null){
                             Log.i(TAG, "login: username"+userName+"password"+password);
                             handler.sendEmptyMessage(0x234);
                         }else {
+                            Log.i(TAG, "login: username"+userName+"password"+password);
                             Store.setBooks(task.get());
                             handler.sendEmptyMessage(0x123);
                         }

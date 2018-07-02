@@ -28,7 +28,7 @@ public class LoginThread implements Callable<ArrayList<Book>> {
     @Override
     public ArrayList<Book> call() throws Exception {
 
-        JSONArray jsonArray = SocketUtil.sendLoginRequest(userName, password);
+        JSONArray jsonArray = SocketUtil.sendLoginRequest(User.getUserName(), User.getPassword());
         if (jsonArray == null){
             return null;
         }

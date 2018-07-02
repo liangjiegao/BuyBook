@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import java.util.concurrent.FutureTask;
 
 
 public class MainActivity extends Activity {
-
+    private static final String TAG = "MainActivity";
     private RecyclerView mBookList;
     private Button submit;
 
@@ -54,8 +55,10 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void run() {
-                        boolean isSuccessSub = SocketUtil.sendSubmitRequest(User.getUserName(),selectBook);
+
+                        boolean isSuccessSub = SocketUtil.sendSubmitRequest(selectBook);
                         if (isSuccessSub){
+                            Log.i(TAG, "run: ");
                             handler.sendEmptyMessage(0x123);
                         }
                     }
@@ -69,13 +72,14 @@ public class MainActivity extends Activity {
 
     private void initData(){
         selectBook = new HashSet<>();
-        bookList = new ArrayList<>();
-        bookList.add(new Book("haha",10,"123"));
+        bookList = getBookList();
+        /*bookList.add(new Book("haha",10,"123"));
         bookList.add(new Book("haha",100,"123"));
         bookList.add(new Book("haha",25.5,"123"));
         bookList.add(new Book("haha",25.5,"123"));
         bookList.add(new Book("haha",25.5,"123"));
         bookList.add(new Book("haha",25.5,"123"));
+        */
     }
     private MyRVAdapter adapter;
     private void setAdapter(){

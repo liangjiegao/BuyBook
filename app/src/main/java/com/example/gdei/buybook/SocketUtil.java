@@ -1,5 +1,7 @@
 package com.example.gdei.buybook;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -7,7 +9,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.Buffer;
 import java.util.HashSet;
@@ -17,7 +21,7 @@ import java.util.HashSet;
  */
 
 public class SocketUtil {
-
+    private static final String TAG = "SocketUtil";
     public static void setHost(String host) {
         SocketUtil.host = host;
     }
@@ -26,7 +30,7 @@ public class SocketUtil {
         SocketUtil.post = post;
     }
 
-    private static String host = "10.2.229.233";
+    private static String host = "192.168.43.203";
     private static int post = 3333;
 
     private static String code = "1";    //访问结果码，是否访问成功,1表示失败，0表示成功
@@ -36,17 +40,24 @@ public class SocketUtil {
         try {
             Socket socket = new Socket(host,post);
             JSONArray jsonArray;
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            writer.write("1/"+user+"/"+pass);
+            //OutputStream os = socket.getOutputStream();
+            //os.write(1);
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(),true);
+            writer.println("1/"+user+"/"+pass);
+            //BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            //writer.write("1/"+user+"/"+pass);
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             code = reader.readLine();
             if (code.equals("1")){
+                Log.i(TAG, "code: "+code);
                 socket.close();
                 return null;
             }else {
-                BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String result = brToString(br);
-                jsonArray = new JSONArray(result);
+                Log.i(TAG, "code: "+code);
+                //BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                //String result = brToString(code);
+                jsonArray = new JSONArray(code);
                 return jsonArray;
             }
 
@@ -57,16 +68,21 @@ public class SocketUtil {
     }
 
 
-    public static boolean sendSubmitRequest(String userName, HashSet<Book> bookSelect){
+    public static boolean sendSubmitRequest( HashSet<Book> bookSelect){
 
         try {
             Socket socket = new Socket(host,post);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+
+            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             StringBuffer bookMsg = new StringBuffer();
             for (Book book: bookSelect) {
                 bookMsg.append(book.getBookName()+"/"+book.getNum()+"/");
             }
-            bw.write("2/"+userName+bookMsg);
+            PrintWriter bw = new PrintWriter(socket.getOutputStream(),true);
+            //bw.println("2/"+userName+"/"+pass);
+            Log.i(TAG, "sendSubmitRequest: "+User.getUserName());
+            bw.println("2/"+User.getUserName()+"/"+bookMsg);
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             if (br.readLine().equals("0")){
                 return true;
