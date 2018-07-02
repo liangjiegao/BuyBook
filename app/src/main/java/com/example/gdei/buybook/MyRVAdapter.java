@@ -55,13 +55,13 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.MyHolder>{
         holder.mReduce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.reduceNum(holder, book);
+                mListener.reduceNum(holder, book,position);
             }
         });
         holder.mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.addNum(holder,book);
+                mListener.addNum(holder,book, position);
             }
         });
     }
@@ -93,9 +93,9 @@ public class MyRVAdapter extends RecyclerView.Adapter<MyRVAdapter.MyHolder>{
     }
     interface OnBookARClickListener{
 
-        void addNum(MyHolder myHolder,Book book);
+        void addNum(MyHolder myHolder,Book book,int pos);
 
-        void reduceNum(MyHolder myHolder, Book book);
+        void reduceNum(MyHolder myHolder, Book book, int pos);
 
     }
 }

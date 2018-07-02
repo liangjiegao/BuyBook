@@ -40,8 +40,6 @@ public class Book {
     private double price;
     private String img;
 
-
-
     private int num;
 
     public Book(String bookName, double price, String img){
